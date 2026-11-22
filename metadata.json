@@ -1,0 +1,6 @@
+{
+  "name": "CART3R Chess Academy",
+  "description": "Original international chess platform featuring online multiplayer, Stockfish-grade engine analysis, Mirror Bot, 16 Legendary AI personalities, GM Coach, custom boards, and tournaments.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

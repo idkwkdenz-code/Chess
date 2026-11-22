@@ -1,0 +1,48 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Set up Java 17 (required for Android Gradle)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies and build web bundle
+        run: |
+          npm install
+          npm run build
+
+      - name: Initialize Capacitor Android project and build APK
+        run: |
+          npm install --no-save @capacitor/core @capacitor/cli @capacitor/android
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Upload CART3R-Chess-debug.apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: CART3R-Chess-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
